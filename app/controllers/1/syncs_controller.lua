@@ -129,6 +129,8 @@ function SyncsController:get_progress()
         res.document = doc
     end
 
+    local h = io.popen("logger get " .. username .. ", " .. res.device .. ", " .. res.percentage .. ", " .. doc)
+    h.close()
     return 200, res
 end
 
@@ -150,6 +152,8 @@ function SyncsController:update_progress()
     local device = self.request.body.device
     local device_id = self.request.body.device_id
     local timestamp = os.time()
+    local h = io.popen("logger set " .. username .. ", " .. device .. ", " .. percentage .. ", " .. doc)
+    h.close()
     if percentage and progress and device then
         local key = string.format(self.doc_key, username, doc)
         local ok, err = redis:hmset(key, {
